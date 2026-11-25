@@ -2,11 +2,18 @@
 $pageTitle = 'Tarefas';
 $status = $_GET['status'] ?? '';
 $sql = 'SELECT * FROM tarefas';
+$params = [];
+
 if ($status !== '') {
-    $sql .= " WHERE status='Pendente'";
+    $sql .= ' WHERE status = ?';
+    $params[] = $status;
 }
 $sql .= ' ORDER BY prazo';
-$tarefas = $pdo->query($sql)->fetchAll();
+
+$q = $pdo->prepare($sql);
+$q->execute($params);
+
+$tarefas = $q->fetchAll();
 require '../includes/header.php'; ?><div class="head">
     <div>
         <h1>Tarefas</h1>
